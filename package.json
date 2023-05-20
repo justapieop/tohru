@@ -1,6 +1,5 @@
 {
   "name": "tohru",
-  "version": "1.0.0",
   "description": "A music Discord bot. Crafted with DiscordJS",
   "main": "dist/index.js",
   "scripts": {
@@ -15,5 +14,10 @@
   "bugs": {
     "url": "https://github.com/justapieop/tohru/issues"
   },
-  "homepage": "https://github.com/justapieop/tohru#readme"
+  "homepage": "https://github.com/justapieop/tohru#readme",
+  "dependencies": {
+    "@types/node": "^20.2.1",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4"
+  }
 }
