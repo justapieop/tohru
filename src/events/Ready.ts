@@ -11,7 +11,9 @@ export class Ready {
         if (Constants.NODE_ENV_DEV) await client.initApplicationCommands({
             global: {
                 disable: {
-                    add: true
+                    add: true,
+                    delete: true,
+                    update: true
                 }
             }
         });
