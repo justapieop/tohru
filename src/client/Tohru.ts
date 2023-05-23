@@ -4,10 +4,12 @@ import { Logger } from "../utils/Logger.js";
 import { dirname, importx } from "@discordx/importer";
 import { Guild, Options } from "discord.js";
 import { ClusterClient, getInfo } from "discord-hybrid-sharding";
+import Bridge from "discord-cross-hosting";
 
 declare module "discordx" {
     export interface Client {
-        cluster: ClusterClient<Client>
+        cluster: ClusterClient<Client>,
+        machine: Bridge.Shard
     }
 }
 
@@ -37,6 +39,7 @@ export class Tohru extends Client {
         });
 
         this.cluster = new ClusterClient(this);
+        this.machine = new Bridge.Shard(this.cluster);
     }
 
     public async run(): Promise<void> {
