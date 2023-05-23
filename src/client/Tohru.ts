@@ -48,6 +48,7 @@ export class Tohru extends Client {
             if (!Constants.NODE_ENV_DEV)
                 Logger.getLogger().error("Failed to load commands and events.");
         }
+
         await this.login(process.env.DISCORD_TOKEN);
     }
 }
