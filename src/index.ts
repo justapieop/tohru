@@ -1,11 +1,10 @@
 (await import("dotenv")).config();
 import { ClusterManager, Cluster } from "discord-hybrid-sharding";
-import { join } from "path";
 import { Logger } from "./utils/Logger.js";
 
 export class HybridSharder extends ClusterManager {
     public constructor() {
-        super(join("dist", "launch.js"), {
+        super("dist/launch.js", {
             token: process.env.DISCORD_TOKEN,
             totalShards: "auto",
             totalClusters: "auto",
