@@ -2,8 +2,10 @@
   "name": "tohru",
   "description": "A music Discord bot. Crafted with DiscordJS",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "run": "node ."
   },
   "repository": {
     "type": "git",
@@ -16,8 +18,18 @@
   },
   "homepage": "https://github.com/justapieop/tohru#readme",
   "dependencies": {
+    "@discordx/importer": "^1.2.2",
+    "discord-cross-hosting": "^2.3.2",
+    "discord-hybrid-sharding": "^2.1.2",
+    "discord.js": "^14.11.0",
+    "discordx": "^11.7.6",
+    "dotenv": "^16.0.3",
+    "fecha": "^4.2.3",
+    "reflect-metadata": "^0.1.13",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
     "@types/node": "^20.2.1",
-    "tsup": "^6.7.0",
     "typescript": "^5.0.4"
   }
 }
