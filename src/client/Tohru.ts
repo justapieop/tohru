@@ -5,11 +5,14 @@ import { dirname, importx } from "@discordx/importer";
 import { Guild, Options } from "discord.js";
 import { ClusterClient, getInfo } from "discord-hybrid-sharding";
 import Bridge from "discord-cross-hosting";
+import { MusicManager } from "../modules/music/MusicManager.js";
+import { DBClient } from "../modules/db/DBClient.js";
 
-declare module "discordx" {
+declare module "discord.js" {
     export interface Client {
         cluster: ClusterClient<Client>,
-        machine: Bridge.Shard
+        machine: Bridge.Shard,
+        music: MusicManager
     }
 }
 
@@ -40,9 +43,16 @@ export class Tohru extends Client {
 
         this.cluster = new ClusterClient(this);
         this.machine = new Bridge.Shard(this.cluster);
+        this.music = new MusicManager(this);
     }
 
     public async run(): Promise<void> {
+        DBClient.getClient().then(
+            () => Logger.getLogger().info("Connected to MongoDB instance.")
+        ).catch(
+            () => Logger.getLogger().info("Failed to connect to MongoDB instance.")
+        );
+
         try {
             await importx(`${dirname(import.meta.url)}/../{commands,events}/**/*.{js,ts}`);
             if (!Constants.NODE_ENV_DEV)
@@ -53,5 +63,7 @@ export class Tohru extends Client {
         }
 
         await this.login(process.env.DISCORD_TOKEN);
+
+        await this.music.start();
     }
 }
