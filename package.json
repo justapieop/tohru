@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "run": "node ."
+    "run:client": "node .",
+    "run:bridge": "node dist/bridge.js",
+    "start": "concurrently npm:run:*"
   },
   "repository": {
     "type": "git",
@@ -30,6 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.2.1",
+    "concurrently": "^8.0.1",
     "typescript": "^5.0.4"
   }
 }
