@@ -5,7 +5,7 @@ import { Logger } from "./utils/Logger.js";
 
 export class HybridSharder extends ClusterManager {
     public constructor() {
-        super(join(import.meta.url, "launch.js"), {
+        super(join("dist", "launch.js"), {
             token: process.env.DISCORD_TOKEN,
             totalShards: "auto",
             totalClusters: "auto",
