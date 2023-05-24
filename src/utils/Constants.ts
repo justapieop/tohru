@@ -9,4 +9,6 @@ export class Constants {
         IntentsBitField.Flags.MessageContent;
 
     public static readonly NODE_ENV_DEV: boolean = process.env.NODE_ENV.toLowerCase() === "dev";
+
+    public static readonly YOUTUBE_URL_REGEX: RegExp = /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})/;
 }
