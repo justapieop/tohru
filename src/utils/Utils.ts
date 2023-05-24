@@ -7,4 +7,13 @@ export class Utils {
             return false;
         }
     }
+
+    public static checkURL(s: string): boolean {
+        try {
+            new URL(s);
+            return true;
+        } catch (e: any) {
+            return false;
+        }
+    }
 }
