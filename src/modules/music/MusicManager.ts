@@ -1,6 +1,6 @@
 import { Client, Guild } from "discord.js";
 import { Connectors } from "shoukaku";
-import { Kazagumo } from "kazagumo";
+import { Kazagumo, Plugins } from "kazagumo";
 import { Constants } from "../../utils/Constants.js";
 import { Logger } from "../../utils/Logger.js";
 import { LavalinkNodeSchema, LavalinkNode } from "../db/schemas/LavalinkNode.js";
@@ -14,7 +14,10 @@ export class MusicManager extends Kazagumo {
             send: async (guildId: string, payload: any) => {
                 const guild: Guild = await client.guilds.fetch(guildId);
                 if (guild) guild.shard.send(payload, true);
-            }
+            },
+            plugins: [
+                new Plugins.PlayerMoved(client)
+            ]
         }, new Connectors.DiscordJS(client), []);
 
         this.shoukaku.on("debug", (_: string, info: string) => {
