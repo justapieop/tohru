@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "run:client": "node .",
-    "run:bridge": "node dist/bridge.js"
+    "start:client": "node .",
+    "start:bridge": "node dist/bridge.js"
   },
   "repository": {
     "type": "git",
