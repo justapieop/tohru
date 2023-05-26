@@ -20,6 +20,7 @@
   "homepage": "https://github.com/justapieop/tohru#readme",
   "dependencies": {
     "@discordx/importer": "^1.2.2",
+    "@discordx/pagination": "^3.4.1",
     "discord-cross-hosting": "^2.2.4",
     "discord-hybrid-sharding": "^2.1.2",
     "discord.js": "^14.11.0",
