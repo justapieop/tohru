@@ -16,4 +16,12 @@ export class Utils {
             return false;
         }
     }
+
+    public static chunk<T>(a: T[], size: number): T[][] {
+        return a.reduce((all: T[][], one: T, i: number) => {
+            const ch: number = Math.floor(i / size);
+            all[ch] = [].concat((all[ch] || []), one);
+            return all;
+        }, []);
+    }
 }
