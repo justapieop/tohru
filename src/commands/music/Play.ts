@@ -17,6 +17,8 @@ export class Play {
         url: string,
         interaction: CommandInteraction
     ): Promise<void> {
+        await interaction.deferReply();
+
         const member: GuildMember = await interaction.guild.members.fetch(interaction.user);
         const memVoice: VoiceState = member.voice;
         const botVoice: VoiceState = (await interaction.guild.members.fetchMe()).voice;
@@ -54,7 +56,7 @@ export class Play {
             }
         }
 
-        const playable: boolean = player.queue.isEmpty;
+        const playable: boolean = !player.queue.current;
 
         let res: KazagumoSearchResult;
 
@@ -97,8 +99,8 @@ export class Play {
                             description: `Requested by <@${track.requester}>`,
                             fields: [
                                 {
-                                    name: `[${track.title}](${track.uri})`,
-                                    value: `Author: ${track.author}`,
+                                    name: track.title,
+                                    value: `➡️ ${track.uri}\nAuthor: ${track.author}`,
                                     inline: false
                                 }
                             ]

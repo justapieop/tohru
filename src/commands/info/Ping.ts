@@ -5,6 +5,7 @@ import { Discord, Slash } from "discordx";
 export class Ping {
     @Slash({ name: "ping", description: "Show how long it takes for Tohru to fly from Kobayashi's home." })
     public async ping(interaction: CommandInteraction): Promise<void> {
+        await interaction.deferReply();
         const wsPing: number = interaction.client.ws.ping;
 
         const msg: Message = await interaction.editReply({
