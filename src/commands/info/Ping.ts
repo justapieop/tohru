@@ -17,7 +17,7 @@ export class Ping {
             ]
         });
 
-        const ping: number = Math.abs(Date.now() - msg.createdTimestamp);
+        const ping: number = Math.abs(interaction.createdTimestamp - msg.createdTimestamp);
 
         await msg.edit({
             embeds: [
