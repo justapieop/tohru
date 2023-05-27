@@ -24,7 +24,7 @@ export class MusicManager extends Kazagumo {
             if (Constants.NODE_ENV_DEV) Logger.getLogger().debug(info);
         });
 
-        this.shoukaku.on("ready", () =>
+        this.shoukaku.once("ready", () =>
             Logger.getLogger().info("Shoukaku is ready.")
         );
         this._client = client;
