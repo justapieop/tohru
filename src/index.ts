@@ -11,7 +11,7 @@ export class BridgeClient extends Bridge.Client {
             host: process.env.BRIDGE_HOST,
             port: Number(process.env.BRIDGE_PORT),
             authToken: process.env.BRIDGE_AUTH_TOKEN,
-            rollingRestarts: false,
+            rollingRestarts: true,
             tls: true,
             retries: 120,
             options: {
