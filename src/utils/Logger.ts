@@ -3,6 +3,8 @@ import { createLogger, Logger as WLogger, format, transports } from "winston";
 import { Constants } from "./Constants.js";
 import { Utils } from "./Utils.js";
 import { ILogger } from "discordx";
+import { RouterContext } from "@koa/router";
+import { Next } from "koa";
 
 export class Logger {
     private static readonly _LOGGER: WLogger = createLogger({
@@ -60,5 +62,10 @@ export class Logger {
                 this._LOGGER.log("debug", args.join());
             }
         }
+    }
+
+    public static async getKoaLogger(ctx: RouterContext, next: Next): Promise<Next> {
+        Logger.getLogger().info(`[${ctx.url}]: ${ctx.request.method}.`);
+        return await next();
     }
 }

@@ -2,6 +2,7 @@ import { Bridge } from "discord-cross-hosting";
 import { TLSSocket } from "tls";
 import { Logger } from "./utils/Logger.js";
 import { Constants } from "./utils/Constants.js";
+import { API } from "./api/API.js";
 
 export class BridgeServer extends Bridge {
     public constructor() {
@@ -30,4 +31,6 @@ export class BridgeServer extends Bridge {
     }
 }
 
-await new BridgeServer().start();
+export const bridge: BridgeServer = new BridgeServer();
+await bridge.start();
+await new API(bridge).start();
