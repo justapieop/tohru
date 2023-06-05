@@ -41,7 +41,7 @@ export class Play {
                 player = await client.music.createPlayer({
                     guildId: interaction.guildId,
                     voiceId: memVoice.channelId,
-                    textId: "",
+                    textId: interaction.channelId,
                     volume: 100
                 });
             else if (botVoice.channelId !== memVoice.channelId) {
