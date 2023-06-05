@@ -1,11 +1,12 @@
 import { Colors, CommandInteraction, Message } from "discord.js";
-import { Discord, Slash } from "discordx";
+import { Discord, Guard, Slash } from "discordx";
+import { InteractionGuards } from "../../guards/InteractionGuards.js";
 
 @Discord()
 export class Ping {
     @Slash({ name: "ping", description: "Show how long it takes for Tohru to fly from Kobayashi's home." })
+    @Guard(InteractionGuards.Defer)
     public async ping(interaction: CommandInteraction): Promise<void> {
-        await interaction.deferReply();
         const wsPing: number = interaction.client.ws.ping;
 
         const msg: Message = await interaction.editReply({

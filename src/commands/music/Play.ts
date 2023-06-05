@@ -1,12 +1,14 @@
 import { CommandInteraction, ApplicationCommandOptionType, GuildMember, VoiceState, Colors, StageChannel } from "discord.js";
-import { Discord, Slash, SlashOption } from "discordx";
+import { Client, Discord, Guard, Slash, SlashOption } from "discordx";
 import { KazagumoPlayer, KazagumoSearchResult, KazagumoTrack } from "kazagumo";
 import { Utils } from "../../utils/Utils.js";
 import { Constants } from "../../utils/Constants.js";
+import { InteractionGuards } from "../../guards/InteractionGuards.js";
 
 @Discord()
 export class Play {
     @Slash({ name: "play", description: "Lets Tohru sing for you." })
+    @Guard(InteractionGuards.Defer)
     public async play(
         @SlashOption({
             name: "url",
@@ -15,15 +17,14 @@ export class Play {
             required: true
         })
         url: string,
-        interaction: CommandInteraction
+        interaction: CommandInteraction,
+        client: Client
     ): Promise<void> {
-        await interaction.deferReply();
-
         const member: GuildMember = await interaction.guild.members.fetch(interaction.user);
         const memVoice: VoiceState = member.voice;
         const botVoice: VoiceState = (await interaction.guild.members.fetchMe()).voice;
 
-        let player: KazagumoPlayer = interaction.client.music.getPlayer(interaction.guildId);
+        let player: KazagumoPlayer = client.music.getPlayer(interaction.guildId);
 
         if (!memVoice.channelId) {
             await interaction.editReply({
@@ -37,7 +38,7 @@ export class Play {
             return;
         } else {
             if (!botVoice.channelId || (botVoice.channelId === memVoice.channelId && !player))
-                player = await interaction.client.music.createPlayer({
+                player = await client.music.createPlayer({
                     guildId: interaction.guildId,
                     voiceId: memVoice.channelId,
                     textId: "",
@@ -100,7 +101,7 @@ export class Play {
                             fields: [
                                 {
                                     name: track.title,
-                                    value: `➡️ ${track.uri}\nAuthor: ${track.author}`,
+                                    value: `${track.uri}\n➡ Author: ${track.author}`,
                                     inline: false
                                 }
                             ]
