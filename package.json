@@ -22,6 +22,7 @@
     "@discordx/importer": "^1.2.2",
     "@discordx/koa": "^1.1.2",
     "@discordx/pagination": "^3.4.1",
+    "@discordx/utilities": "^5.2.1",
     "@koa/cors": "^4.0.0",
     "@koa/router": "^12.0.0",
     "discord-cross-hosting": "^2.2.4",
