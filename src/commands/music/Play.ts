@@ -42,7 +42,8 @@ export class Play {
                     guildId: interaction.guildId,
                     voiceId: memVoice.channelId,
                     textId: interaction.channelId,
-                    volume: 100
+                    volume: 100,
+                    deaf: true
                 });
             else if (botVoice.channelId !== memVoice.channelId) {
                 await interaction.editReply({
