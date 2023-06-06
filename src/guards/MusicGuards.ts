@@ -6,7 +6,8 @@ export class MusicGuards {
     public static async RequireActiveQueue(
         interaction: CommandInteraction,
         client: Client,
-        next: Next
+        next: Next,
+        guardData: any
     ): Promise<GuardFunction<CommandInteraction>> {
         const player: KazagumoPlayer = client.music.getPlayer(interaction.guildId);
 
@@ -21,6 +22,8 @@ export class MusicGuards {
             });
             return;
         }
+
+        guardData.player = player;
 
         await next();
     }

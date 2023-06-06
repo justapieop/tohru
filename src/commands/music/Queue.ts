@@ -1,16 +1,16 @@
-import { PaginationResolver, PaginationItem, Pagination, PaginationType } from "@discordx/pagination";
-import { Discord, Guard, Slash } from "discordx";
+import { PaginationResolver, Pagination, PaginationType } from "@discordx/pagination";
+import { Client, Discord, Guard, Slash } from "discordx";
 import { MusicGuards } from "../../guards/MusicGuards.js";
 import { CommandInteraction, EmbedBuilder } from "discord.js";
-import { KazagumoTrack } from "kazagumo";
+import { KazagumoPlayer, KazagumoTrack } from "kazagumo";
 import { Utils } from "../../utils/Utils.js";
 
 @Discord()
 export class Queue {
     @Slash({ name: "queue", description: "Shows the queue." })
     @Guard(MusicGuards.RequireActiveQueue)
-    public async queue(interaction: CommandInteraction): Promise<void> {
-        const { queue } = interaction.client.music.getPlayer(interaction.guildId);
+    public async queue(interaction: CommandInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+        const { queue } = guardData.player;
         const chunked: KazagumoTrack[][] = Utils.chunk(queue, 5);
 
         const resolver: PaginationResolver = new PaginationResolver(
