@@ -17,14 +17,14 @@ export class Controller {
 
     @ButtonComponent({ id: "play" })
     @Guard(MusicGuards.RequireActivePlayer)
-    private async onPlay(interaction: ButtonInteraction, guardData: { player: KazagumoPlayer }): Promise<void> {
+    private async onPlay(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
         if (guardData.player.paused) guardData.player.pause(false);
         await this.render(interaction);
     }
 
     @ButtonComponent({ id: "pause" })
     @Guard(MusicGuards.RequireActivePlayer)
-    private async onPause(interaction: ButtonInteraction, guardData: { player: KazagumoPlayer }): Promise<void> {
+    private async onPause(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
         if (!guardData.player.paused) guardData.player.pause(true);
         await this.render(interaction);
     }
