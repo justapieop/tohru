@@ -24,4 +24,18 @@ export class Utils {
             return all;
         }, []);
     }
+
+    public static shuffle<T>(arr: T[]): void {
+        let last: number = arr.length;
+        let n: number;
+        while (last > 0) {
+            n = 0 | Math.random() * last;
+            this.swap(arr, n, --last);
+        }
+    }
+
+    public static swap<T>(arr: T[], a: number, b: number): T[] {
+        [arr[a], arr[b]] = [arr[b], arr[a]];
+        return arr;
+    }
 }
