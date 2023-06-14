@@ -56,21 +56,16 @@ export class Controller {
     @ButtonComponent({ id: "trackLoop" })
     @Guard(MusicGuards.RequireActivePlayer)
     private async onTrackLoop(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        guardData.player.setLoop("track");
+        if (guardData.player.loop !== "track") guardData.player.setLoop("track");
+        else guardData.player.setLoop("none");
         await this.render(interaction);
     }
 
     @ButtonComponent({ id: "queueLoop" })
     @Guard(MusicGuards.RequireActivePlayer)
     private async onQueueLoop(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        guardData.player.setLoop("queue");
-        await this.render(interaction);
-    }
-
-    @ButtonComponent({ id: "clearLoop" })
-    @Guard(MusicGuards.RequireActivePlayer)
-    private async onClearLoop(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        guardData.player.setLoop("none");
+        if (guardData.player.loop !== "queue") guardData.player.setLoop("queue");
+        else guardData.player.setLoop("none");
         await this.render(interaction);
     }
 
@@ -85,7 +80,7 @@ export class Controller {
     @ButtonComponent({ id: "247" })
     @Guard(MusicGuards.RequireActivePlayer)
     private async on247(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        GuildSetting.findOneAndUpdate({
+        await GuildSetting.findOneAndUpdate({
             id: interaction.guildId
         }, {
             $set: { alwaysOn: !(await getGuildSetting(interaction.guildId)).alwaysOn }
@@ -100,6 +95,7 @@ export class Controller {
         guardData.player.prev = [];
         guardData.player.queue.clear();
         guardData.player.queue.add(joined);
+        await guardData.player.play(guardData.player.queue.shift(), { replaceCurrent: true });
         await this.render(interaction);
     }
 
