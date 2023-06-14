@@ -2,7 +2,7 @@ import { ButtonInteraction, CommandInteraction, EmbedBuilder, ActionRowBuilder, 
 import { Discord, Slash, Guard, ButtonComponent, Client } from "discordx";
 import { KazagumoPlayer, KazagumoTrack } from "kazagumo";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
-import { GuildSettingSchema, getGuildSetting } from "../../modules/db/schemas/GuildSettings.js";
+import { GuildSetting, GuildSettingSchema, getGuildSetting } from "../../modules/db/schemas/GuildSettings.js";
 import { MusicGuards } from "../../guards/MusicGuards.js";
 import { Utils } from "../../utils/Utils.js";
 
@@ -82,6 +82,17 @@ export class Controller {
         await this.render(interaction);
     }
 
+    @ButtonComponent({ id: "247" })
+    @Guard(MusicGuards.RequireActivePlayer)
+    private async on247(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+        GuildSetting.findOneAndUpdate({
+            id: interaction.guildId
+        }, {
+            $set: { alwaysOn: !(await getGuildSetting(interaction.guildId)).alwaysOn }
+        });
+        await this.render(interaction);
+    }
+
     @ButtonComponent({ id: "restart" })
     @Guard(MusicGuards.RequireActivePlayer)
     private async onRestart(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
@@ -150,8 +161,9 @@ export class Controller {
                     .setStyle(player.loop === "queue" ? ButtonStyle.Success : ButtonStyle.Danger),
                 new ButtonBuilder()
                     .setStyle(ButtonStyle.Primary)
-                    .setCustomId("clearLoop")
-                    .setLabel("⏺️"),
+                    .setCustomId("247")
+                    .setLabel("🔄️")
+                    .setStyle(guildSetting.alwaysOn ? ButtonStyle.Success : ButtonStyle.Danger),
                 new ButtonBuilder()
                     .setStyle(ButtonStyle.Primary)
                     .setCustomId("shuffle")
