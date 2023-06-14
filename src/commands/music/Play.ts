@@ -4,6 +4,7 @@ import { KazagumoPlayer, KazagumoSearchResult, KazagumoTrack } from "kazagumo";
 import { Utils } from "../../utils/Utils.js";
 import { Constants } from "../../utils/Constants.js";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
+import { GuildSettingSchema, getGuildSetting } from "../../modules/db/schemas/GuildSettings.js";
 
 declare module "kazagumo" {
     export interface KazagumoPlayer {
@@ -31,6 +32,8 @@ export class Play {
         const memVoice: VoiceState = member.voice;
         const botVoice: VoiceState = (await interaction.guild.members.fetchMe()).voice;
 
+        const guildSetting: GuildSettingSchema = await getGuildSetting(interaction.guildId);
+
         let player: KazagumoPlayer = client.music.getPlayer(interaction.guildId);
 
         if (!memVoice.channelId) {
@@ -49,7 +52,7 @@ export class Play {
                     guildId: interaction.guildId,
                     voiceId: memVoice.channelId,
                     textId: interaction.channelId,
-                    volume: 100,
+                    volume: guildSetting.defaultVolume,
                     deaf: true
                 });
             else if (botVoice.channelId !== memVoice.channelId) {
