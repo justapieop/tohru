@@ -1,9 +1,10 @@
 import { ButtonInteraction, CommandInteraction, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import { Discord, Slash, Guard, ButtonComponent, Client } from "discordx";
-import { KazagumoPlayer } from "kazagumo";
+import { KazagumoPlayer, KazagumoTrack } from "kazagumo";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
 import { GuildSettingSchema, getGuildSetting } from "../../modules/db/schemas/GuildSettings.js";
 import { MusicGuards } from "../../guards/MusicGuards.js";
+import { Utils } from "../../utils/Utils.js";
 
 @Discord()
 export class Controller {
@@ -13,7 +14,23 @@ export class Controller {
         await this.render(interaction);
     }
 
+    @ButtonComponent({ id: "prev" })
+    @Guard(MusicGuards.RequirePrevQueue)
+    private async onPrev(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+        guardData.player.queue.unshift(guardData.player.queue.current);
+        guardData.player.skippedToPrev = true;
+        guardData.player.play(guardData.player.prev.pop(), { replaceCurrent: true });
+        guardData.player.skippedToPrev = false;
+        await this.render(interaction);
+    }
 
+    @ButtonComponent({ id: "after" })
+    @Guard(MusicGuards.RequireActiveQueue)
+    private async onAfter(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+
+        guardData.player.play(guardData.player.queue.shift(), { replaceCurrent: true });
+        await this.render(interaction);
+    }
 
     @ButtonComponent({ id: "play" })
     @Guard(MusicGuards.RequireActivePlayer)
@@ -29,8 +46,56 @@ export class Controller {
         await this.render(interaction);
     }
 
+    @ButtonComponent({ id: "stop" })
+    @Guard(MusicGuards.RequireActivePlayer)
+    private async onStop(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+        guardData.player.destroy();
+        await interaction.deleteReply();
+    }
+
+    @ButtonComponent({ id: "trackLoop" })
+    @Guard(MusicGuards.RequireActivePlayer)
+    private async onTrackLoop(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+        guardData.player.setLoop("track");
+        await this.render(interaction);
+    }
+
+    @ButtonComponent({ id: "queueLoop" })
+    @Guard(MusicGuards.RequireActivePlayer)
+    private async onQueueLoop(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+        guardData.player.setLoop("queue");
+        await this.render(interaction);
+    }
+
+    @ButtonComponent({ id: "clearLoop" })
+    @Guard(MusicGuards.RequireActivePlayer)
+    private async onClearLoop(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+        guardData.player.setLoop("none");
+        await this.render(interaction);
+    }
+
+    @ButtonComponent({ id: "shuffle" })
+    @Guard(MusicGuards.RequireActivePlayer)
+    private async onShuffle(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+        guardData.player.queue.shuffle();
+        Utils.shuffle(guardData.player.prev);
+        await this.render(interaction);
+    }
+
+    @ButtonComponent({ id: "restart" })
+    @Guard(MusicGuards.RequireActivePlayer)
+    private async onRestart(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+        const joined: KazagumoTrack[] = [...guardData.player.prev, ...guardData.player.queue];
+        guardData.player.prev = [];
+        guardData.player.queue.clear();
+        guardData.player.queue.add(joined);
+        await this.render(interaction);
+    }
+
     private async render(interaction: CommandInteraction | ButtonInteraction): Promise<void> {
-        const { current } = interaction.client.music.getPlayer(interaction.guildId).queue;
+        const player: KazagumoPlayer = interaction.client.music.getPlayer(interaction.guildId);
+
+        const { current } = player.queue;
 
         const guildSetting: GuildSettingSchema = await getGuildSetting(interaction.guildId);
 
@@ -71,10 +136,36 @@ export class Controller {
                     .setLabel("⏹️")
             );
 
+        const row2: ActionRowBuilder = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setStyle(ButtonStyle.Primary)
+                    .setCustomId("trackLoop")
+                    .setLabel("🔂")
+                    .setStyle(player.loop === "track" ? ButtonStyle.Success : ButtonStyle.Danger),
+                new ButtonBuilder()
+                    .setStyle(ButtonStyle.Primary)
+                    .setCustomId("queueLoop")
+                    .setLabel("🔁")
+                    .setStyle(player.loop === "queue" ? ButtonStyle.Success : ButtonStyle.Danger),
+                new ButtonBuilder()
+                    .setStyle(ButtonStyle.Primary)
+                    .setCustomId("clearLoop")
+                    .setLabel("⏺️"),
+                new ButtonBuilder()
+                    .setStyle(ButtonStyle.Primary)
+                    .setCustomId("shuffle")
+                    .setLabel("🔀"),
+                new ButtonBuilder()
+                    .setStyle(ButtonStyle.Primary)
+                    .setCustomId("restart")
+                    .setLabel("↩️")
+            );
+
         await interaction.editReply({
             embeds: [embed],
             // @ts-ignore
-            components: [row1]
+            components: [row1, row2]
         });
     }
 }
