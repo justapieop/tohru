@@ -4,22 +4,24 @@ import { KazagumoPlayer } from "kazagumo";
 
 export class MusicGuards {
     public static async RequireActiveQueue(
-        interaction: CommandInteraction,
+        interaction: CommandInteraction | ButtonInteraction,
         client: Client,
         next: Next,
         guardData: any
-    ): Promise<GuardFunction<CommandInteraction>> {
+    ): Promise<GuardFunction<CommandInteraction | ButtonInteraction>> {
         const player: KazagumoPlayer = client.music.getPlayer(interaction.guildId);
 
         if (!player || player.queue.isEmpty) {
-            await interaction.reply({
-                embeds: [
-                    {
-                        color: Colors.Red,
-                        description: "❌ Please put something in the queue first!"
-                    }
-                ]
-            });
+            if (interaction instanceof CommandInteraction) {
+                await interaction.reply({
+                    embeds: [
+                        {
+                            color: Colors.Red,
+                            description: "❌ Please put something in the queue first!"
+                        }
+                    ]
+                });
+            }
             return;
         }
 
@@ -71,6 +73,30 @@ export class MusicGuards {
             });
             return;
         }
+
+        await next();
+    }
+
+    public static async RequirePrevQueue(
+        interaction: CommandInteraction | ButtonInteraction,
+        client: Client,
+        next: Next,
+        guardData: any
+    ): Promise<GuardFunction<CommandInteraction | ButtonInteraction>> {
+        const player: KazagumoPlayer = client.music.getPlayer(interaction.guildId);
+        if (!player || !player.prev || !player.prev.length) {
+            if (interaction instanceof CommandInteraction) await interaction.reply({
+                embeds: [
+                    {
+                        color: Colors.Red,
+                        description: "❌ Please put something in the previous queue first!"
+                    }
+                ]
+            });
+            return;
+        }
+
+        guardData.player = player;
 
         await next();
     }

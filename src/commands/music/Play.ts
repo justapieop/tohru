@@ -5,6 +5,13 @@ import { Utils } from "../../utils/Utils.js";
 import { Constants } from "../../utils/Constants.js";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
 
+declare module "kazagumo" {
+    export interface KazagumoPlayer {
+        prev: KazagumoTrack[],
+        skippedToPrev: boolean
+    }
+}
+
 @Discord()
 export class Play {
     @Slash({ name: "play", description: "Lets Tohru sing for you." })
@@ -142,6 +149,8 @@ export class Play {
                     ]
                 });
             }
+            player.skippedToPrev = false;
+            player.prev = [];
             await player.play(player.queue[0], { replaceCurrent: true });
         }
     }
