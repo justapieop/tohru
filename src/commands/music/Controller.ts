@@ -73,7 +73,6 @@ export class Controller {
     @Guard(MusicGuards.RequireActivePlayer)
     private async onShuffle(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
         guardData.player.queue.shuffle();
-        Utils.shuffle(guardData.player.prev);
         await this.render(interaction);
     }
 
