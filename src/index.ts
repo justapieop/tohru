@@ -9,7 +9,7 @@ export class BridgeClient extends Bridge.Client {
         super({
             agent: "bot",
             host: process.env.BRIDGE_HOST,
-            port: Number(process.env.BRIDGE_PORT),
+            port: Number(process.env.PORT),
             authToken: process.env.BRIDGE_AUTH_TOKEN,
             rollingRestarts: true,
             tls: true,
