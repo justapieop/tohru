@@ -9,8 +9,8 @@ import { Utils } from "../../utils/Utils.js";
 export class PrevQueue {
     @Slash({ name: "prevqueue", description: "Shows the previous queue." })
     @Guard(MusicGuards.RequirePrevQueue)
-    public async queue(interaction: CommandInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        const { prev } = guardData.player;
+    public async queue(interaction: CommandInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        const { prev } = player;
         const chunked: KazagumoTrack[][] = Utils.chunk(prev, 5);
 
         const resolver: PaginationResolver = new PaginationResolver(

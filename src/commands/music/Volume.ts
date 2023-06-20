@@ -19,9 +19,9 @@ export class Volume {
         volume: number,
         interaction: CommandInteraction,
         _: Client,
-        guardData: { player: KazagumoPlayer }
+        { player }: { player: KazagumoPlayer }
     ): Promise<void> {
-        guardData.player.setVolume(volume);
+        player.setVolume(volume);
         await interaction.reply({
             embeds: [
                 {

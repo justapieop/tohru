@@ -9,8 +9,8 @@ import { Utils } from "../../utils/Utils.js";
 export class Queue {
     @Slash({ name: "queue", description: "Shows the queue." })
     @Guard(MusicGuards.RequireActiveQueue)
-    public async queue(interaction: CommandInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        const { queue } = guardData.player;
+    public async queue(interaction: CommandInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        const { queue } = player;
         const chunked: KazagumoTrack[][] = Utils.chunk(queue, 5);
 
         const resolver: PaginationResolver = new PaginationResolver(

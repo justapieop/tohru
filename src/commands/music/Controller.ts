@@ -15,69 +15,69 @@ export class Controller {
 
     @ButtonComponent({ id: "prev" })
     @Guard(MusicGuards.RequirePrevQueue)
-    private async onPrev(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        guardData.player.queue.unshift(guardData.player.queue.current);
-        guardData.player.skippedToPrev = true;
-        guardData.player.play(guardData.player.prev.pop(), { replaceCurrent: true });
-        guardData.player.skippedToPrev = false;
+    private async onPrev(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        player.queue.unshift(player.queue.current);
+        player.skippedToPrev = true;
+        player.play(player.prev.pop(), { replaceCurrent: true });
+        player.skippedToPrev = false;
         await this.render(interaction);
     }
 
     @ButtonComponent({ id: "after" })
     @Guard(MusicGuards.RequireActiveQueue)
-    private async onAfter(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+    private async onAfter(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
 
-        guardData.player.play(guardData.player.queue.shift(), { replaceCurrent: true });
+        player.play(player.queue.shift(), { replaceCurrent: true });
         await this.render(interaction);
     }
 
     @ButtonComponent({ id: "play" })
     @Guard(MusicGuards.RequireActivePlayer)
-    private async onPlay(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        if (guardData.player.paused) guardData.player.pause(false);
+    private async onPlay(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        if (player.paused) player.pause(false);
         await this.render(interaction);
     }
 
     @ButtonComponent({ id: "pause" })
     @Guard(MusicGuards.RequireActivePlayer)
-    private async onPause(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        if (!guardData.player.paused) guardData.player.pause(true);
+    private async onPause(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        if (!player.paused) player.pause(true);
         await this.render(interaction);
     }
 
     @ButtonComponent({ id: "stop" })
     @Guard(MusicGuards.RequireActivePlayer)
-    private async onStop(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        guardData.player.destroy();
+    private async onStop(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        player.destroy();
         await interaction.deleteReply();
     }
 
     @ButtonComponent({ id: "trackLoop" })
     @Guard(MusicGuards.RequireActivePlayer)
-    private async onTrackLoop(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        if (guardData.player.loop !== "track") guardData.player.setLoop("track");
-        else guardData.player.setLoop("none");
+    private async onTrackLoop(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        if (player.loop !== "track") player.setLoop("track");
+        else player.setLoop("none");
         await this.render(interaction);
     }
 
     @ButtonComponent({ id: "queueLoop" })
     @Guard(MusicGuards.RequireActivePlayer)
-    private async onQueueLoop(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        if (guardData.player.loop !== "queue") guardData.player.setLoop("queue");
-        else guardData.player.setLoop("none");
+    private async onQueueLoop(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        if (player.loop !== "queue") player.setLoop("queue");
+        else player.setLoop("none");
         await this.render(interaction);
     }
 
     @ButtonComponent({ id: "shuffle" })
     @Guard(MusicGuards.RequireActivePlayer)
-    private async onShuffle(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        guardData.player.queue.shuffle();
+    private async onShuffle(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        player.queue.shuffle();
         await this.render(interaction);
     }
 
     @ButtonComponent({ id: "247" })
     @Guard(MusicGuards.RequireActivePlayer)
-    private async on247(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
+    private async on247(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
         await GuildSetting.findOneAndUpdate({
             id: interaction.guildId
         }, {
@@ -88,12 +88,12 @@ export class Controller {
 
     @ButtonComponent({ id: "restart" })
     @Guard(MusicGuards.RequireActivePlayer)
-    private async onRestart(interaction: ButtonInteraction, _: Client, guardData: { player: KazagumoPlayer }): Promise<void> {
-        const joined: KazagumoTrack[] = [...guardData.player.prev, ...guardData.player.queue];
-        guardData.player.prev = [];
-        guardData.player.queue.clear();
-        guardData.player.queue.add(joined);
-        await guardData.player.play(guardData.player.queue.shift(), { replaceCurrent: true });
+    private async onRestart(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        const joined: KazagumoTrack[] = [...player.prev, ...player.queue];
+        player.prev = [];
+        player.queue.clear();
+        player.queue.add(joined);
+        await player.play(player.queue.shift(), { replaceCurrent: true });
         await this.render(interaction);
     }
 
