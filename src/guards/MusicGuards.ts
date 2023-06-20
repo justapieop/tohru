@@ -58,7 +58,8 @@ export class MusicGuards {
     public static async RequireAvailablePlayer(
         interaction: CommandInteraction | ButtonInteraction,
         client: Client,
-        next: Next
+        next: Next,
+        guardData: any
     ): Promise<GuardFunction<CommandInteraction | ButtonInteraction>> {
         const player: KazagumoPlayer = client.music.getPlayer(interaction.guildId);
 
@@ -73,6 +74,8 @@ export class MusicGuards {
             });
             return;
         }
+
+        guardData.player = player;
 
         await next();
     }
