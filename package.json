@@ -20,11 +20,8 @@
   "homepage": "https://github.com/justapieop/tohru#readme",
   "dependencies": {
     "@discordx/importer": "^1.2.2",
-    "@discordx/koa": "^1.1.2",
     "@discordx/pagination": "^3.4.1",
     "@discordx/utilities": "^5.2.1",
-    "@koa/cors": "^4.0.0",
-    "@koa/router": "^12.0.0",
     "discord-cross-hosting": "^2.2.4",
     "discord-hybrid-sharding": "^2.1.2",
     "discord.js": "^14.11.0",
@@ -32,9 +29,6 @@
     "dotenv": "^16.0.3",
     "fecha": "^4.2.3",
     "kazagumo": "^2.3.2",
-    "koa": "^2.14.2",
-    "koa-bodyparser": "^4.4.0",
-    "koa-json": "^2.0.2",
     "mongoose": "^7.2.0",
     "reflect-metadata": "^0.1.13",
     "shoukaku": "^3.4.0",
@@ -42,11 +36,6 @@
   },
   "devDependencies": {
     "@typegoose/typegoose": "^11.2.0",
-    "@types/koa__cors": "^4.0.0",
-    "@types/koa__router": "^12.0.0",
-    "@types/koa-bodyparser": "^4.3.10",
-    "@types/koa-json": "^2.0.20",
-    "@types/koa-response-time": "^2.1.2",
     "@types/node": "^20.2.1",
     "typescript": "^5.0.4"
   }

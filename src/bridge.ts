@@ -2,7 +2,6 @@ import { Bridge } from "discord-cross-hosting";
 import { TLSSocket } from "tls";
 import { Logger } from "./utils/Logger.js";
 import { Constants } from "./utils/Constants.js";
-import { API } from "./api/API.js";
 
 export class BridgeServer extends Bridge {
     public constructor() {
@@ -16,7 +15,7 @@ export class BridgeServer extends Bridge {
             tls: true,
             options: {
                 ciphers: "PSK",
-                pskCallback: (socket: TLSSocket, identity: string) => {
+                pskCallback: (_: TLSSocket, identity: string) => {
                     const key: Buffer = Buffer.from(process.env.BRIDGE_PSK);
                     if (identity === process.env.BRIDGE_IDENTITY) return key;
                 }
@@ -33,4 +32,3 @@ export class BridgeServer extends Bridge {
 
 export const bridge: BridgeServer = new BridgeServer();
 await bridge.start();
-await new API(bridge).start();
