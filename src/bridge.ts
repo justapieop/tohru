@@ -7,7 +7,7 @@ export class BridgeServer extends Bridge {
     public constructor() {
         super({
             token: process.env.DISCORD_TOKEN,
-            port: Number(process.env.BRIDGE_PORT),
+            port: Number(process.env.PORT),
             authToken: process.env.BRIDGE_AUTH_TOKEN,
             totalShards: "auto",
             shardsPerCluster: Number(process.env.SHARD_PER_CLUSTER),
