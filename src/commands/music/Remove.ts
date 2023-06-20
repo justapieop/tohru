@@ -33,7 +33,7 @@ export class Remove {
         await interaction.reply({
             embeds: [
                 {
-                    color: Colors.Red,
+                    color: Colors.Green,
                     description: `✅ Removed ${removed} ${removed > 1 ? "tracks" : "track"}.`
                 }
             ]
