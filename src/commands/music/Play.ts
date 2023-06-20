@@ -5,11 +5,15 @@ import { Utils } from "../../utils/Utils.js";
 import { Constants } from "../../utils/Constants.js";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
 import { GuildSettingSchema, getGuildSetting } from "../../modules/db/schemas/GuildSettings.js";
+import { DefaultSettings } from "../../utils/DefaultSettings.js";
 
 declare module "kazagumo" {
     export interface KazagumoPlayer {
         prev: KazagumoTrack[],
-        skippedToPrev: boolean
+        skippedToPrev: boolean,
+        filterStatus: {
+            nightcore: boolean
+        }
     }
 }
 
@@ -154,6 +158,7 @@ export class Play {
             }
             player.skippedToPrev = false;
             player.prev = [];
+            player.filterStatus = DefaultSettings.DEFAULT_FILTER_STATUS;
             await player.play(player.queue[0], { replaceCurrent: true });
         }
     }

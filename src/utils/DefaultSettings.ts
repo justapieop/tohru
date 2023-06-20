@@ -8,4 +8,8 @@ export class DefaultSettings {
             defaultVolume: 100
         };
     }
+
+    public static readonly DEFAULT_FILTER_STATUS = {
+        nightcore: false
+    };
 }
