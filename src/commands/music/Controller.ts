@@ -4,7 +4,6 @@ import { KazagumoPlayer, KazagumoTrack } from "kazagumo";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
 import { GuildSetting, GuildSettingSchema, getGuildSetting } from "../../modules/db/schemas/GuildSettings.js";
 import { MusicGuards } from "../../guards/MusicGuards.js";
-import { Utils } from "../../utils/Utils.js";
 
 @Discord()
 export class Controller {
