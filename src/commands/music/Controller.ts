@@ -9,8 +9,8 @@ import { MusicGuards } from "../../guards/MusicGuards.js";
 export class Controller {
     @Slash({ name: "controller", description: "Controls the music player." })
     @Guard(MusicGuards.RequireAvailablePlayer, InteractionGuards.Defer)
-    public async controller(interaction: CommandInteraction): Promise<void> {
-        await this.render(interaction);
+    public async controller(interaction: CommandInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
+        await this.render(interaction, { player });
     }
 
     @ButtonComponent({ id: "prev" })
@@ -20,7 +20,7 @@ export class Controller {
         player.skippedToPrev = true;
         player.play(player.prev.pop(), { replaceCurrent: true });
         player.skippedToPrev = false;
-        await this.render(interaction);
+        await this.render(interaction, { player });
     }
 
     @ButtonComponent({ id: "after" })
@@ -28,21 +28,21 @@ export class Controller {
     private async onAfter(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
 
         player.play(player.queue.shift(), { replaceCurrent: true });
-        await this.render(interaction);
+        await this.render(interaction, { player });
     }
 
     @ButtonComponent({ id: "play" })
     @Guard(MusicGuards.RequireActivePlayer)
     private async onPlay(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
         if (player.paused) player.pause(false);
-        await this.render(interaction);
+        await this.render(interaction, { player });
     }
 
     @ButtonComponent({ id: "pause" })
     @Guard(MusicGuards.RequireActivePlayer)
     private async onPause(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
         if (!player.paused) player.pause(true);
-        await this.render(interaction);
+        await this.render(interaction, { player });
     }
 
     @ButtonComponent({ id: "stop" })
@@ -57,7 +57,7 @@ export class Controller {
     private async onTrackLoop(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
         if (player.loop !== "track") player.setLoop("track");
         else player.setLoop("none");
-        await this.render(interaction);
+        await this.render(interaction, { player });
     }
 
     @ButtonComponent({ id: "queueLoop" })
@@ -65,14 +65,14 @@ export class Controller {
     private async onQueueLoop(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
         if (player.loop !== "queue") player.setLoop("queue");
         else player.setLoop("none");
-        await this.render(interaction);
+        await this.render(interaction, { player });
     }
 
     @ButtonComponent({ id: "shuffle" })
     @Guard(MusicGuards.RequireActivePlayer)
     private async onShuffle(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
         player.queue.shuffle();
-        await this.render(interaction);
+        await this.render(interaction, { player });
     }
 
     @ButtonComponent({ id: "247" })
@@ -83,7 +83,7 @@ export class Controller {
         }, {
             $set: { alwaysOn: !(await getGuildSetting(interaction.guildId)).alwaysOn }
         });
-        await this.render(interaction);
+        await this.render(interaction, { player });
     }
 
     @ButtonComponent({ id: "restart" })
@@ -94,12 +94,10 @@ export class Controller {
         player.queue.clear();
         player.queue.add(joined);
         await player.play(player.queue.shift(), { replaceCurrent: true });
-        await this.render(interaction);
+        await this.render(interaction, { player });
     }
 
-    private async render(interaction: CommandInteraction | ButtonInteraction): Promise<void> {
-        const player: KazagumoPlayer = interaction.client.music.getPlayer(interaction.guildId);
-
+    private async render(interaction: CommandInteraction | ButtonInteraction, { player }: { player: KazagumoPlayer }): Promise<void> {
         const { current } = player.queue;
 
         const guildSetting: GuildSettingSchema = await getGuildSetting(interaction.guildId);
