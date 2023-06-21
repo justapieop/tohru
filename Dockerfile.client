@@ -18,7 +18,7 @@ ENV SHARD_PER_CLUSTER=${SHARD_PER_CLUSTER}
 
 WORKDIR /usr/tohru/client
 
-COPY package*.json ./
+COPY package*.json .
 
 RUN ["npm", "install"]
 
