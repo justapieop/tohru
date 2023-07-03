@@ -30,6 +30,7 @@
     "fecha": "^4.2.3",
     "kazagumo": "^2.3.2",
     "mongoose": "^7.2.0",
+    "pretty-ms": "^8.0.0",
     "reflect-metadata": "^0.1.13",
     "shoukaku": "^3.4.0",
     "winston": "^3.8.2"

@@ -38,4 +38,17 @@ export class Utils {
         [arr[a], arr[b]] = [arr[b], arr[a]];
         return arr;
     }
+
+    public static createProgressBar(percent: number, characterCount: number = 10, emptyCharacter: string = "▱"): string {
+        let value: number = percent;
+
+        if (percent > 1) {
+            value = percent / 100;
+        }
+
+        const fill: number = Math.round(value * characterCount);
+        return `[${"▰".repeat(fill)}${emptyCharacter.repeat(
+            characterCount - fill
+        )}]`.slice(0, characterCount + 2);
+    }
 }
