@@ -1,9 +1,11 @@
+import prettyMs from "pretty-ms";
 import { ButtonInteraction, CommandInteraction, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import { Discord, Slash, Guard, ButtonComponent, Client } from "discordx";
 import { KazagumoPlayer, KazagumoTrack } from "kazagumo";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
 import { GuildSetting, GuildSettingSchema, getGuildSetting } from "../../modules/db/schemas/GuildSettings.js";
 import { MusicGuards } from "../../guards/MusicGuards.js";
+import { Utils } from "../../utils/Utils.js";
 
 @Discord()
 export class Controller {
@@ -108,12 +110,20 @@ export class Controller {
             .addFields(
                 current ? {
                     name: current.title,
-                    value: `${current.uri}\n➡ Uploader: ${current.author} | Requester: <@${current.requester}>`
+                    value: `${current.uri}\n➡ Uploader: ${current.author} | Requester: <@${current.requester}>`,
+                    inline: false
                 } : {
                     name: "No track is being played",
-                    value: "Please add something to play"
+                    value: "Please add something to play",
+                    inline: false
                 }
-            );
+            )
+            .setFooter({
+                text: prettyMs(player.shoukaku.position) + " "
+                    + Utils.createProgressBar((player.shoukaku.position / player.queue.current.length) * 100, 12) + ` `
+                    + prettyMs(player.queue.current.length)
+            });
+
 
         const row1: ActionRowBuilder = new ActionRowBuilder()
             .addComponents(
