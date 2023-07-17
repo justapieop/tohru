@@ -5,9 +5,9 @@ import { ArgsOf, Client, Discord, On } from "discordx";
 export class InteractionCreate {
     @On({ event: "interactionCreate" })
     public async onInteractionCreate([interaction]: ArgsOf<"interactionCreate">, client: Client): Promise<void> {
-        if (interaction.createdTimestamp < client.readyTimestamp) return;
-
-        if (interaction instanceof ButtonInteraction) await interaction.deferUpdate();
+        if (interaction instanceof ButtonInteraction) {
+            await interaction.deferUpdate();
+        }
         await client.executeInteraction(interaction);
     }
 }
