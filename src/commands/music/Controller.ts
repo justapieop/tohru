@@ -18,18 +18,29 @@ export class Controller {
     @ButtonComponent({ id: "prev" })
     @Guard(MusicGuards.RequirePrevQueue)
     private async onPrev(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
-        player.queue.unshift(player.queue.current);
+        if (player.queue.current)
+            player.queue.unshift(player.queue.current);
+
         player.skippedToPrev = true;
-        player.play(player.prev.pop(), { replaceCurrent: true });
+        if (player.prev.length) player.play(player.prev.pop(), { noReplace: false });
+        else {
+            player.queue.add(player.queue.current);
+            player.queue.current = null;
+            player.shoukaku.stopTrack();
+        }
         player.skippedToPrev = false;
         await this.render(interaction, { player });
     }
 
     @ButtonComponent({ id: "after" })
-    @Guard(MusicGuards.RequireActiveQueue)
+    @Guard(MusicGuards.RequireActivePlayer)
     private async onAfter(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
-
-        player.play(player.queue.shift(), { replaceCurrent: true });
+        if (player.queue.length) player.play(player.queue.shift(), { noReplace: false });
+        else {
+            player.prev.push(player.queue.current);
+            player.queue.current = null;
+            player.shoukaku.stopTrack();
+        }
         await this.render(interaction, { player });
     }
 
@@ -95,7 +106,7 @@ export class Controller {
         player.prev = [];
         player.queue.clear();
         player.queue.add(joined);
-        await player.play(player.queue.shift(), { replaceCurrent: true });
+        await player.play(player.queue.shift(), { noReplace: false });
         await this.render(interaction, { player });
     }
 
@@ -118,11 +129,11 @@ export class Controller {
                     inline: false
                 }
             )
-            .setFooter({
+            .setFooter(current ? {
                 text: prettyMs(player.shoukaku.position) + " "
                     + Utils.createProgressBar((player.shoukaku.position / player.queue.current.length) * 100, 12) + ` `
                     + prettyMs(player.queue.current.length)
-            });
+            } : null);
 
 
         const row1: ActionRowBuilder = new ActionRowBuilder()
