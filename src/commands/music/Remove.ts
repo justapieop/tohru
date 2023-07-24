@@ -2,7 +2,6 @@ import { Client, Discord, Guard, Slash, SlashOption } from "discordx";
 import { MusicGuards } from "../../guards/MusicGuards.js";
 import { ApplicationCommandOptionType, Colors, CommandInteraction } from "discord.js";
 import { KazagumoPlayer } from "kazagumo";
-import { Logger } from "../../utils/Logger.js";
 
 @Discord()
 export class Remove {
