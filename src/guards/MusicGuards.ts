@@ -37,9 +37,6 @@ export class MusicGuards {
         guardData: any
     ): Promise<GuardFunction<CommandInteraction | ButtonInteraction>> {
         const player: KazagumoPlayer = client.music.getPlayer(interaction.guildId);
-
-        console.log("checking condition...")
-
         if (!player || !player.queue.current) {
             if (interaction instanceof CommandInteraction) await interaction.reply({
                 embeds: [
@@ -51,9 +48,6 @@ export class MusicGuards {
             });
             return;
         }
-
-        console.log("condition passed...")
-
         guardData.player = player;
 
         await next();
