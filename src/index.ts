@@ -4,6 +4,9 @@ import Bridge from "discord-cross-hosting";
 import { Logger } from "./utils/Logger.js";
 import { Constants } from "./utils/Constants.js";
 
+process.on("unhandledRejection", (reason: string) => Logger.getLogger().error(`[UNHANDLED] ${reason}`));
+process.on("uncaughtException", (reason: string) => Logger.getLogger().error(`[UNCAUGHT] ${reason}`));
+
 export class BridgeClient extends Bridge.Client {
     public constructor() {
         super({
