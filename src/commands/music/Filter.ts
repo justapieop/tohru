@@ -4,7 +4,6 @@ import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonIn
 import { MusicGuards } from "../../guards/MusicGuards.js";
 import { KazagumoPlayer } from "kazagumo";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
-import { DefaultSettings } from "../../utils/DefaultSettings.js";
 
 
 @Discord()
@@ -64,7 +63,10 @@ export class Filter {
         await interaction.editReply({
             embeds: [{
                 color: Colors.Green,
-                description: "‼️ Choose one of the buttons below to activate filter."
+                description: "‼️ Choose one of the buttons below to activate filter.",
+                footer: {
+                    text: "It will take a few seconds to activate the filter."
+                }
             }],
             // @ts-ignore
             components: [row]
