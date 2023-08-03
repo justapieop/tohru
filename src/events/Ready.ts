@@ -26,5 +26,6 @@ export class Ready {
         }, 5000);
 
         Logger.getLogger().info(`Logged in as ${client.user.tag}`);
+        await client.music.start();
     }
 }

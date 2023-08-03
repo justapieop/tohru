@@ -32,7 +32,7 @@ export class Tohru extends Client {
                 ...Options.DefaultSweeperSettings,
                 messages: {
                     interval: 43200,
-                    lifetime: 21000
+                    lifetime: 21600
                 }
             },
             silent: !Constants.NODE_ENV_DEV,
@@ -63,7 +63,5 @@ export class Tohru extends Client {
         }
 
         await this.login(process.env.DISCORD_TOKEN);
-
-        await this.music.start();
     }
 }
