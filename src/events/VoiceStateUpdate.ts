@@ -24,7 +24,7 @@ export class VoiceStateUpdate {
 
         if (oldState.channelId && !newState.channelId) {
             if (oldState.channel.members.hasAny(self.id)) {
-                if (oldState.channel.members.filter((m: GuildMember) => !m.user.bot)) {
+                if (oldState.channel.members.filter((m: GuildMember) => !m.user.bot).size === 0) {
                     if (guildSetting.alwaysOn) return;
                     if (player) player.destroy();
                     await self.voice.disconnect();
