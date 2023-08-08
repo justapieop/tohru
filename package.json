@@ -2,9 +2,10 @@
   "name": "tohru",
   "description": "A music Discord bot. Crafted with DiscordJS",
   "type": "module",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node .",
     "start:bridge": "node dist/bridge.js"
   },
   "repository": {
