@@ -36,7 +36,6 @@ export class Tohru extends Client {
                 }
             },
             silent: !Constants.NODE_ENV_DEV,
-            botGuilds: [Constants.NODE_ENV_DEV ? process.env.DISCORD_DEV_GUILD_ID : (client: Client) => client.guilds.cache.map((guild: Guild) => guild.id)],
             shards: getInfo().SHARD_LIST,
             shardCount: getInfo().TOTAL_SHARDS
         });
