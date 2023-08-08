@@ -24,9 +24,7 @@ export class Controller {
         player.skippedToPrev = true;
         if (player.prev.length) player.play(player.prev.pop(), { noReplace: false });
         else {
-            player.queue.add(player.queue.current);
-            player.queue.current = null;
-            player.shoukaku.stopTrack();
+            if (player.playing) player.shoukaku.stopTrack();
         }
         player.skippedToPrev = false;
         await this.render(interaction, { player });
