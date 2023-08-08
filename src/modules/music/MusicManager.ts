@@ -1,9 +1,10 @@
 import { Client, Guild } from "discord.js";
-import { Connectors } from "shoukaku";
-import { Kazagumo, KazagumoPlayer, Plugins } from "kazagumo";
+import { Connectors, TrackEndEvent } from "shoukaku";
+import { Kazagumo, KazagumoPlayer, KazagumoTrack, Plugins } from "kazagumo";
 import { Constants } from "../../utils/Constants.js";
 import { Logger } from "../../utils/Logger.js";
 import { LavalinkNodeSchema, LavalinkNode } from "../db/schemas/LavalinkNode.js";
+import { DefaultSettings } from "../../utils/DefaultSettings.js";
 
 export class MusicManager extends Kazagumo {
     private _client: Client;
@@ -28,8 +29,14 @@ export class MusicManager extends Kazagumo {
             Logger.getLogger().info("Shoukaku is ready.")
         );
 
-        this.on("playerEnd", (player: KazagumoPlayer) => {
-            if (!player.skippedToPrev || player.loop === "none") player.prev.push(player.queue.current);
+        this.on("playerCreate", (player: KazagumoPlayer) => {
+            player.skippedToPrev = false;
+            player.prev = [];
+            player.filterStatus = DefaultSettings.DEFAULT_FILTER_STATUS;
+            player.shoukaku.on("end", (event: TrackEndEvent) => {
+                if (event.reason === "FINISHED")
+                    player.prev.push(player.queue.previous);
+            });
         });
 
         this._client = client;
