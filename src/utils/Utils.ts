@@ -51,4 +51,20 @@ export class Utils {
             characterCount - fill
         )}]`.slice(0, characterCount + 2);
     }
+
+    public static stringToMs(str: string): number {
+        const s: string[] = str.replaceAll(" ", "").split(":");
+
+        let sum: number = 0, t = 0;
+
+        for (let i: number = s.length - 1; i >= 0; i--) {
+            t = Number(s[i]);
+            if (i === s.length - 2) t *= 60;
+            if (i === s.length - 3) t *= 3600;
+            if (i === s.length - 4) t *= 24 * 3600;
+            sum += t;
+        }
+
+        return sum * 1000;
+    }
 }
