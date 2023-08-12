@@ -15,6 +15,14 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false 
+      matrix:
+        include:
+          - dockerfile: .docker/bridge/Dockerfile
+            image: ghcr.io/justapieop/tohru-bridge
+          - dockerfile: .docker/bridge/Dockerfile
+            image: ghcr.io/justapieop/tohru-client
     permissions:
       contents: read
       packages: write
@@ -45,7 +53,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ matrix.image }}
 
       - name: Build and push Docker image
         id: build-and-push
@@ -55,6 +63,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          files: ${{ matrix.dockerfile }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
