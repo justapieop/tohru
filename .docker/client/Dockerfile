@@ -26,4 +26,4 @@ COPY . .
 
 RUN ["npm", "run", "build"]
 
-CMD ["npm", "run", "start:client"]
+CMD ["npm", "run", "start"]
