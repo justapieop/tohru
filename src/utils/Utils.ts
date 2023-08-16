@@ -25,6 +25,17 @@ export class Utils {
         }, []);
     }
 
+    public static splitIntoNChunks<T>(a: T[], n: number): T[][] {
+        const array: T[] = a.slice();
+        const result: T[][] = Array.from({ length: n }, () => []);
+
+        for (let i: number = 0; array.length; i = (i + 1) % n) {
+            result[i].push(array.shift());
+        }
+
+        return result;
+    }
+
     public static shuffle<T>(arr: T[]): void {
         let last: number = arr.length;
         let n: number;
