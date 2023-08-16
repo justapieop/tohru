@@ -23,8 +23,6 @@ jobs:
             image: ghcr.io/justapieop/tohru-bridge
           - dockerfile: .docker/client/Dockerfile
             image: ghcr.io/justapieop/tohru-client
-          - platform: linux/amd64
-          - platform: linux/arm64
     permissions:
       contents: read
       packages: write
@@ -57,7 +55,7 @@ jobs:
         with:
           context: .
           file: ${{ matrix.dockerfile }}
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
