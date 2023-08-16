@@ -28,7 +28,6 @@
     "discordx": "^11.7.6",
     "dotenv": "^16.0.3",
     "fecha": "^4.2.3",
-    "genius-lyrics": "^4.4.3",
     "kazagumo": "^2.3.2",
     "mongoose": "^7.2.0",
     "pretty-ms": "^8.0.0",
