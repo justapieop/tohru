@@ -17,12 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - dockerfile: .docker/bridge/Dockerfile
-            image: ghcr.io/justapieop/tohru-bridge
-          - dockerfile: .docker/client/Dockerfile
-            image: ghcr.io/justapieop/tohru-client
     permissions:
       contents: read
       packages: write
@@ -48,13 +42,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ matrix.image }}
+          images: ghcr.io/${{ github.repository }}
 
       - name: Build and push Docker image Drill4Net.Agent.Service
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ${{ matrix.dockerfile }}
+          file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}

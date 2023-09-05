@@ -1,17 +1,15 @@
 import { Client } from "discordx";
 import { Constants } from "../utils/Constants.js";
-import { Logger } from "../utils/Logger.js";
 import { dirname, importx } from "@discordx/importer";
-import { Guild, Options } from "discord.js";
+import { Options } from "discord.js";
 import { ClusterClient, getInfo } from "discord-hybrid-sharding";
-import Bridge from "discord-cross-hosting";
 import { MusicManager } from "../modules/music/MusicManager.js";
 import { DBClient } from "../modules/db/DBClient.js";
+import { Log } from "../utils/Log.js";
 
 declare module "discord.js" {
     export interface Client {
         cluster: ClusterClient<Client>,
-        machine: Bridge.Shard,
         music: MusicManager
     }
 }
@@ -21,7 +19,6 @@ export class Tohru extends Client {
         super({
             botId: process.env.DISCORD_CLIENT_ID,
             intents: Constants.GATEWAY_INTENTS,
-            logger: Logger.getDiscordxLogger(),
             makeCache: Options.cacheWithLimits({
                 ...Options.DefaultMakeCacheSettings,
                 MessageManager: {
@@ -37,28 +34,28 @@ export class Tohru extends Client {
             },
             silent: !Constants.NODE_ENV_DEV,
             shards: getInfo().SHARD_LIST,
-            shardCount: getInfo().TOTAL_SHARDS
+            shardCount: getInfo().TOTAL_SHARDS,
+            logger: Log.dxHook
         });
 
         this.cluster = new ClusterClient(this);
-        this.machine = new Bridge.Shard(this.cluster);
         this.music = new MusicManager(this);
     }
 
     public async run(): Promise<void> {
         DBClient.getClient().then(
-            () => Logger.getLogger().info("Connected to MongoDB instance.")
+            () => Log.logger.info("Connected to MongoDB instance.")
         ).catch(
-            () => Logger.getLogger().info("Failed to connect to MongoDB instance.")
+            () => Log.logger.fatal("Failed to connect to MongoDB instance.")
         );
 
         try {
             await importx(`${dirname(import.meta.url)}/../{commands,events}/**/*.{js,ts}`);
             if (!Constants.NODE_ENV_DEV)
-                Logger.getLogger().info("Loaded commands and events.");
+                Log.logger.info("Loaded commands and events.");
         } catch (e: any) {
             if (!Constants.NODE_ENV_DEV)
-                Logger.getLogger().error("Failed to load commands and events.");
+                Log.logger.fatal("Failed to load commands and events.");
         }
 
         await this.login(process.env.DISCORD_TOKEN);

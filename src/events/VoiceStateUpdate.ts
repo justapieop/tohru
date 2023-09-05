@@ -1,12 +1,12 @@
-import { GuildMember, StageChannel, VoiceBasedChannel } from "discord.js";
+import { Events, GuildMember, StageChannel, VoiceBasedChannel } from "discord.js";
 import { ArgsOf, Client, Discord, On } from "discordx";
 import { KazagumoPlayer } from "kazagumo";
 import { GuildSetting, GuildSettingSchema, getGuildSetting } from "../modules/db/schemas/GuildSettings.js";
 
 @Discord()
 export class VoiceStateUpdate {
-    @On({ event: "voiceStateUpdate" })
-    public async onVoiceStateUpdate([oldState, newState]: ArgsOf<"voiceStateUpdate">, client: Client): Promise<void> {
+    @On({ event: Events.VoiceStateUpdate })
+    public async onVoiceStateUpdate([oldState, newState]: ArgsOf<Events.VoiceStateUpdate>, client: Client): Promise<void> {
         const player: KazagumoPlayer = client.music.getPlayer(newState.guild.id);
         const self: GuildMember = await (oldState.guild ?? newState.guild).members.fetchMe();
         const guildSetting: GuildSettingSchema = await getGuildSetting((oldState ?? newState).guild.id);

@@ -1,3 +1,7 @@
+import { existsSync, openSync, createWriteStream } from "fs";
+import { resolve } from "path";
+import { Level, StreamEntry } from "pino";
+
 export class Utils {
     public static checkJSON(data: any): boolean {
         try {
@@ -77,5 +81,17 @@ export class Utils {
         }
 
         return sum * 1000;
+    }
+
+    public static pinoFileStream(level: Level, path: string): StreamEntry {
+        path = resolve(path);
+        console.log()
+        if (!existsSync(path))
+            openSync(path, "w");
+
+        return {
+            level,
+            stream: createWriteStream(path, { flags: "a", autoClose: true })
+        }
     }
 }

@@ -1,11 +1,11 @@
 import { Client, Discord, On } from "discordx";
-import { Logger } from "../utils/Logger.js";
-import { ActivityType } from "discord.js";
+import { ActivityType, Events } from "discord.js";
 import { Constants } from "../utils/Constants.js";
+import { Log } from "../utils/Log.js";
 
 @Discord()
 export class Ready {
-    @On({ event: "ready" })
+    @On({ event: Events.ClientReady })
     public async onReady([], client: Client): Promise<void> {
         await client.guilds.fetch();
         await client.clearApplicationCommands();
@@ -17,9 +17,9 @@ export class Ready {
                 Array.from(client.applicationCommands)
             );
 
-        client.user.setActivity(`Music With /play`, { type: ActivityType.Streaming });
+        client.user.setActivity(`Music with /play`, { type: ActivityType.Streaming });
 
-        Logger.getLogger().info(`Logged in as ${client.user.tag}`);
+        Log.logger.info(`Logged in as ${client.user.username}`);
         await client.music.start();
     }
 }
