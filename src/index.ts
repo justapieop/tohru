@@ -12,12 +12,14 @@ export class HybridSharder extends ClusterManager {
             token: process.env.DISCORD_TOKEN,
             totalShards: "auto",
             totalClusters: "auto",
-            shardsPerClusters: Number(process.env.SHARD_PER_CLUSTER)
+            shardsPerClusters: Number(process.env.SHARD_PER_CLUSTER),
+            mode: "worker"
         });
 
-        this.on("clusterReady", (cluster: Cluster) =>
+        this.on("clusterCreate", (cluster: Cluster) =>
             Log.logger.info(`Cluster ID: ${cluster.id} is ready.`)
         );
+
         this.on("debug", (msg: string) => {
             if (Constants.NODE_ENV_DEV) Log.logger.debug(msg);
         });
@@ -26,7 +28,7 @@ export class HybridSharder extends ClusterManager {
 
 try {
     await new HybridSharder().spawn({ timeout: -1 });
-    Log.logger.info("Sharding cluster started.");
+    Log.logger.info("Sharding cluster is fully initialized.");
 } catch (e: any) {
     Log.logger.fatal("Failed to start sharding cluster.");
 }
