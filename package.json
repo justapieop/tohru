@@ -21,12 +21,12 @@
     "@discordx/importer": "^1.2.2",
     "@discordx/pagination": "^3.4.1",
     "@discordx/utilities": "^5.2.1",
+    "@prisma/client": "^5.2.0",
     "discord-hybrid-sharding": "^2.1.2",
     "discord.js": "^14.11.0",
     "discordx": "^11.7.6",
     "dotenv": "^16.0.3",
     "kazagumo": "^2.3.2",
-    "mongoose": "^7.2.0",
     "pino": "^8.15.0",
     "pino-pretty": "^10.2.0",
     "pretty-ms": "^8.0.0",
@@ -34,8 +34,8 @@
     "shoukaku": "^3.4.0"
   },
   "devDependencies": {
-    "@typegoose/typegoose": "^11.2.0",
     "@types/node": "^20.2.1",
+    "prisma": "^5.2.0",
     "typescript": "^5.0.4"
   }
 }
