@@ -1,12 +1,9 @@
-(await import("dotenv")).config();
-import { Mongoose, connect } from "mongoose";
+import { PrismaClient } from "@prisma/client";
 
-export class DBClient {
-    private static _CLIENT: Promise<Mongoose> = connect(process.env.MONGODB_URL, {
-        dbName: process.env.MONGODB_DBNAME
-    });
-
-    public static getClient(): Promise<Mongoose> {
-        return this._CLIENT;
+export class DBClient extends PrismaClient {
+    public constructor() {
+        super();
     }
 }
+
+export const client: DBClient = new DBClient();

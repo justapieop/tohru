@@ -3,9 +3,10 @@ import { ButtonInteraction, CommandInteraction, EmbedBuilder, ActionRowBuilder, 
 import { Discord, Slash, Guard, ButtonComponent, Client } from "discordx";
 import { KazagumoPlayer, KazagumoTrack } from "kazagumo";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
-import { GuildSetting, GuildSettingSchema, getGuildSetting } from "../../modules/db/schemas/GuildSettings.js";
 import { MusicGuards } from "../../guards/MusicGuards.js";
 import { Utils } from "../../utils/Utils.js";
+import { client } from "../../modules/db/DBClient.js";
+import { DefaultSettings } from "../../utils/DefaultSettings.js";
 
 @Discord()
 export class Controller {
@@ -89,10 +90,24 @@ export class Controller {
     @ButtonComponent({ id: "247" })
     @Guard(MusicGuards.RequireActivePlayer)
     private async on247(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
-        await GuildSetting.findOneAndUpdate({
-            id: interaction.guildId
-        }, {
-            $set: { alwaysOn: !(await getGuildSetting(interaction.guildId)).alwaysOn }
+        const existing = await client.guildsettings.upsert({
+            select: {
+                alwaysOn: true
+            },
+            where: {
+                id: interaction.guildId,
+            },
+            create: DefaultSettings.defaultGuildSetting(interaction.guildId),
+            update: {}
+        });
+
+        await client.guildsettings.update({
+            where: {
+                id: interaction.guildId
+            },
+            data: {
+                alwaysOn: !existing.alwaysOn
+            }
         });
         await this.render(interaction, { player });
     }
@@ -111,7 +126,13 @@ export class Controller {
     private async render(interaction: CommandInteraction | ButtonInteraction, { player }: { player: KazagumoPlayer }): Promise<void> {
         const { current } = player.queue;
 
-        const guildSetting: GuildSettingSchema = await getGuildSetting(interaction.guildId);
+        const guildSetting = await client.guildsettings.upsert({
+            where: {
+                id: interaction.guildId,
+            },
+            create: DefaultSettings.defaultGuildSetting(interaction.guildId),
+            update: {}
+        });
 
         const embed: EmbedBuilder = new EmbedBuilder()
             .setTitle("Now playing")

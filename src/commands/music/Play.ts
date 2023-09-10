@@ -2,9 +2,10 @@ import { CommandInteraction, ApplicationCommandOptionType, GuildMember, VoiceSta
 import { Client, Discord, Guard, Slash, SlashOption } from "discordx";
 import { KazagumoPlayer, KazagumoSearchResult, KazagumoTrack } from "kazagumo";
 import { Utils } from "../../utils/Utils.js";
+import { client as dbClient } from "../../modules/db/DBClient.js";
 import { Constants } from "../../utils/Constants.js";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
-import { GuildSettingSchema, getGuildSetting } from "../../modules/db/schemas/GuildSettings.js";
+import { DefaultSettings } from "../../utils/DefaultSettings.js";
 
 declare module "kazagumo" {
     export interface KazagumoPlayer {
@@ -35,7 +36,13 @@ export class Play {
         const memVoice: VoiceState = member.voice;
         const botVoice: VoiceState = (await interaction.guild.members.fetchMe()).voice;
 
-        const guildSetting: GuildSettingSchema = await getGuildSetting(interaction.guildId);
+        const guildSetting = await dbClient.guildsettings.upsert({
+            where: {
+                id: interaction.guildId,
+            },
+            create: DefaultSettings.defaultGuildSetting(interaction.guildId),
+            update: undefined
+        });
 
         let player: KazagumoPlayer = client.music.getPlayer(interaction.guildId);
 

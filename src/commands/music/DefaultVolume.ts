@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType, Colors, CommandInteraction } from "discord.js";
 import { Discord, Slash, SlashOption } from "discordx";
-import { GuildSetting, GuildSettingSchema, getGuildSetting } from "../../modules/db/schemas/GuildSettings.js";
+import { client } from "../../modules/db/DBClient.js";
+import { DefaultSettings } from "../../utils/DefaultSettings.js";
 
 @Discord()
 export class DefaultVolume {
@@ -17,12 +18,26 @@ export class DefaultVolume {
         volume: number,
         interaction: CommandInteraction,
     ): Promise<void> {
-        const doc: GuildSettingSchema = await getGuildSetting(interaction.guildId);
+        await client.guildsettings.upsert({
+            select: {
+                alwaysOn: true
+            },
+            where: {
+                id: interaction.guildId,
+            },
+            create: DefaultSettings.defaultGuildSetting(interaction.guildId),
+            update: {}
+        });
 
-        await GuildSetting.findOneAndUpdate({
-            id: doc.id
-        }, {
-            $set: {
+
+        await client.guildsettings.update({
+            select: {
+                defaultVolume: true
+            },
+            where: {
+                id: interaction.guildId,
+            },
+            data: {
                 defaultVolume: volume
             }
         });
