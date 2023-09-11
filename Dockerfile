@@ -20,9 +20,9 @@ COPY package*.json .
 
 RUN npm install
 
-RUN npm run generate
-
 COPY . .
+
+RUN npm run generate
 
 RUN npm run build
 
