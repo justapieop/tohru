@@ -44,8 +44,6 @@ export class MusicManager extends Kazagumo {
 
     public async start(): Promise<void> {
         const nodes: LavalinkNodeSchema[] = Array.from(await LavalinkNode.find());
-
-        console.log(await LavalinkNode.find());
         
         for (const n of nodes) {
             this._client.music.shoukaku.addNode(n);
