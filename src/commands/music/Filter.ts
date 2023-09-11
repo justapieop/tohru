@@ -1,6 +1,5 @@
-import { Discord, Slash, SlashChoice, SlashOption, Guard, Client, ButtonComponent } from "discordx";
-import { EnumChoice } from "@discordx/utilities";
-import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonInteraction, ButtonStyle, Colors, CommandInteraction } from "discord.js";
+import { Discord, Slash, Guard, Client, ButtonComponent } from "discordx";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Colors, CommandInteraction } from "discord.js";
 import { MusicGuards } from "../../guards/MusicGuards.js";
 import { KazagumoPlayer } from "kazagumo";
 import { InteractionGuards } from "../../guards/InteractionGuards.js";
