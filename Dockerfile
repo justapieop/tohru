@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:18-alpine
 
 ARG NODE_ENV
 ARG MONGODB_URL
@@ -18,9 +18,9 @@ WORKDIR /usr/tohru
 
 COPY package*.json .
 
-RUN npm install
-
 COPY . .
+
+RUN npm install
 
 RUN npm run generate
 
