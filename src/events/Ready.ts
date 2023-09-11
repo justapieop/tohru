@@ -9,7 +9,8 @@ export class Ready {
     public async onReady([], client: Client): Promise<void> {
         await client.guilds.fetch();
         await client.clearApplicationCommands();
-
+        await client.music.start();
+        
         !Constants.NODE_ENV_DEV ?
             await client.initGlobalApplicationCommands() :
             await client.initGuildApplicationCommands(
@@ -20,6 +21,5 @@ export class Ready {
         client.user.setActivity(`Music with /play`, { type: ActivityType.Streaming });
 
         Log.logger.info(`Logged in as ${client.user.username}`);
-        await client.music.start();
     }
 }
