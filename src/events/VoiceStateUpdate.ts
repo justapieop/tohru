@@ -1,8 +1,7 @@
 import { Events, GuildMember, StageChannel, VoiceBasedChannel } from "discord.js";
 import { ArgsOf, Client, Discord, On } from "discordx";
 import { KazagumoPlayer } from "kazagumo";
-import { client as dbClient } from "../modules/db/DBClient.js";
-import { DefaultSettings } from "../utils/DefaultSettings.js";
+import { GuildSetting, GuildSettingSchema, getGuildSetting } from "../modules/db/schemas/GuildSettings.js";
 
 @Discord()
 export class VoiceStateUpdate {
@@ -10,13 +9,7 @@ export class VoiceStateUpdate {
     public async onVoiceStateUpdate([oldState, newState]: ArgsOf<Events.VoiceStateUpdate>, client: Client): Promise<void> {
         const player: KazagumoPlayer = client.music.getPlayer(newState.guild.id);
         const self: GuildMember = await (oldState.guild ?? newState.guild).members.fetchMe();
-        const guildSetting = await dbClient.guildsettings.upsert({
-            where: {
-                id: (oldState ?? newState).guild.id,
-            },
-            create: DefaultSettings.defaultGuildSetting((oldState ?? newState).guild.id),
-            update: {}
-        });
+        const guildSetting: GuildSettingSchema = await getGuildSetting((oldState ?? newState).guild.id);
         if (newState.channelId) {
             if (!oldState.channelId) {
                 const channel: VoiceBasedChannel = newState.channel;
@@ -37,14 +30,10 @@ export class VoiceStateUpdate {
                     await self.voice.disconnect();
                 }
             } else if (oldState.member === self) {
-                await dbClient.guildsettings.update({
-                    select: {
-                        alwaysOn: true
-                    },
-                    where: {
-                        id: (oldState ?? newState).guild.id
-                    },
-                    data: {
+                await GuildSetting.findOneAndUpdate({
+                    id: (oldState ?? newState).guild.id
+                }, {
+                    $set: {
                         alwaysOn: false
                     }
                 });

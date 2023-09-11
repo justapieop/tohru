@@ -4,9 +4,8 @@ import { dirname, importx } from "@discordx/importer";
 import { Options } from "discord.js";
 import { ClusterClient, getInfo } from "discord-hybrid-sharding";
 import { MusicManager } from "../modules/music/MusicManager.js";
-import { client } from "../modules/db/DBClient.js";
+import { DBClient } from "../modules/db/DBClient.js";
 import { Log } from "../utils/Log.js";
-import { DefaultSettings } from "../utils/DefaultSettings.js";
 
 declare module "discord.js" {
     export interface Client {
@@ -45,10 +44,11 @@ export class Tohru extends Client {
 
     public async run(): Promise<void> {
         try {
-            await client.$connect();
+            await DBClient.getClient()
             Log.logger.info("Connected to MongoDB instance.");
         } catch (e: any) {
             Log.logger.fatal("Failed to connect to MongoDB instance.");
+            process.exit(1);
         }
 
         try {
@@ -58,6 +58,7 @@ export class Tohru extends Client {
         } catch (e: any) {
             if (!Constants.NODE_ENV_DEV)
                 Log.logger.fatal("Failed to load commands and events.");
+            process.exit(1);
         }
 
         await this.login(process.env.DISCORD_TOKEN);
