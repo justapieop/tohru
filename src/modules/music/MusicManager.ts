@@ -1,5 +1,5 @@
 import { Client, Guild } from "discord.js";
-import { Connectors, TrackEndEvent } from "shoukaku";
+import { Connectors, NodeOption, TrackEndEvent } from "shoukaku";
 import { Kazagumo, KazagumoPlayer, Plugins } from "kazagumo";
 import { Constants } from "../../utils/Constants.js";
 import { DefaultSettings } from "../../utils/DefaultSettings.js";
@@ -43,7 +43,7 @@ export class MusicManager extends Kazagumo {
     }
 
     public async start(): Promise<void> {
-        const nodes = Array.from((await client.lavalinknodes.findMany()));
+        const nodes: NodeOption[] = Array.from((await client.lavalinknodes.findMany()));
 
         for (const n of nodes) {
             this._client.music.shoukaku.addNode(n);
