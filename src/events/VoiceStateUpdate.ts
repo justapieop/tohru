@@ -14,10 +14,12 @@ export class VoiceStateUpdate {
             if (!oldState.channelId) {
                 if (newState.channel instanceof StageChannel) {
                     const channel: StageChannel = newState.channel;
-                    if (!channel.topic) {
-                        await channel.setTopic("Music with Tohru");
-                    }
-                    await self.voice.setRequestToSpeak(true);
+                    try {
+                        if (!channel.topic) {
+                            await channel.setTopic("Music with Tohru");
+                        }
+                        await self.voice.setRequestToSpeak(true);
+                    } catch (e) { }
                 }
             }
             return;
