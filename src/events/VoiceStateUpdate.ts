@@ -12,14 +12,15 @@ export class VoiceStateUpdate {
         const guildSetting: GuildSettingSchema = await getGuildSetting((oldState ?? newState).guild.id);
         if (newState.channelId) {
             if (!oldState.channelId) {
-                const channel: VoiceBasedChannel = newState.channel;
-                if (channel instanceof StageChannel) {
+                if (newState.channel instanceof StageChannel) {
+                    const channel: StageChannel = newState.channel;
                     if (!channel.topic) {
                         await channel.setTopic("Music with Tohru");
                     }
-                    self.voice.setRequestToSpeak(true);
+                    await self.voice.setRequestToSpeak(true);
                 }
             }
+            return;
         }
 
         if (oldState.channelId && !newState.channelId) {
