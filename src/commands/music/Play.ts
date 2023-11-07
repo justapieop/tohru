@@ -11,7 +11,8 @@ declare module "kazagumo" {
         prev: KazagumoTrack[],
         skippedToPrev: boolean,
         filterStatus: {
-            nightcore: boolean
+            nightcore: boolean,
+            daycore: boolean
         }
     }
 }

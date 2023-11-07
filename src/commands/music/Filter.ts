@@ -39,7 +39,8 @@ export class Filter {
     @Guard(MusicGuards.RequireAvailablePlayer)
     private async onClear(interaction: ButtonInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
         player.filterStatus = {
-            nightcore: false
+            nightcore: false,
+            daycore: false
         };
         player.shoukaku.clearFilters();
 
@@ -52,6 +53,10 @@ export class Filter {
                 new ButtonBuilder()
                     .setCustomId("nightcore")
                     .setLabel("Nightcore")
+                    .setStyle(player.filterStatus.nightcore ? ButtonStyle.Success : ButtonStyle.Danger),
+                new ButtonBuilder()
+                    .setCustomId("daycore")
+                    .setLabel("Daycore")
                     .setStyle(player.filterStatus.nightcore ? ButtonStyle.Success : ButtonStyle.Danger),
                 new ButtonBuilder()
                     .setCustomId("clear")
