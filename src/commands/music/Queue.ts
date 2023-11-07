@@ -1,7 +1,7 @@
 import { PaginationResolver, Pagination, PaginationType } from "@discordx/pagination";
-import { Client, Discord, Guard, Slash } from "discordx";
+import { Client, Discord, Guard, Slash, SlashOption } from "discordx";
 import { MusicGuards } from "../../guards/MusicGuards.js";
-import { CommandInteraction, EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType, CommandInteraction, EmbedBuilder } from "discord.js";
 import { KazagumoPlayer, KazagumoTrack } from "kazagumo";
 import { Utils } from "../../utils/Utils.js";
 
@@ -9,14 +9,24 @@ import { Utils } from "../../utils/Utils.js";
 export class Queue {
     @Slash({ name: "queue", description: "Shows the queue." })
     @Guard(MusicGuards.RequireActiveQueue)
-    public async queue(interaction: CommandInteraction, _: Client, { player }: { player: KazagumoPlayer }): Promise<void> {
-        const { queue } = player;
-        const chunked: KazagumoTrack[][] = Utils.chunk(queue, 5);
+    public async queue(
+        interaction: CommandInteraction,
+        @SlashOption({
+            name: "prev",
+            description: "Whether to display the previous queue.",
+            type: ApplicationCommandOptionType.Boolean,
+            required: false
+        }) previous: boolean = false,
+        _: Client,
+        { player }: { player: KazagumoPlayer }
+    ): Promise<void> {
+        const { queue, prev } = player;
+        const chunked: KazagumoTrack[][] = previous ? Utils.chunk(prev, 5) : Utils.chunk(queue, 5);
 
         const resolver: PaginationResolver = new PaginationResolver(
             (page: number) => {
                 const embed: EmbedBuilder = new EmbedBuilder()
-                    .setTitle("Queue")
+                    .setTitle(previous ? "Prevous queue" : "Queue")
                     .setFooter({
                         text: `Page ${page + 1}/${chunked.length}`
                     });
