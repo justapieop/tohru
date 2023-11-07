@@ -10,6 +10,7 @@ export class DefaultSettings {
     }
 
     public static readonly DEFAULT_FILTER_STATUS = {
-        nightcore: false
+        nightcore: false,
+        daycore: false
     };
 }
