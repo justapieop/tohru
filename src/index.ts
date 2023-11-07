@@ -6,11 +6,20 @@ import { Log } from "./utils/Log.js";
 process.on("unhandledRejection", (reason: string) => Log.logger.error(`[Unhandled] ${reason}`));
 process.on("uncaughtException", (reason: string) => Log.logger.error(`[Uncaught] ${reason}`));
 
+const shardList: number[] = [
+    ...String(process.env.SHARD_LIST)
+        .replaceAll(" ", "")
+        .replaceAll(",", "")
+        .split("")
+        .map((v: string) => Number(v))
+];
+
 export class HybridSharder extends ClusterManager {
     public constructor() {
         super("dist/launch.js", {
             token: process.env.DISCORD_TOKEN,
-            totalShards: "auto",
+            totalShards: Number(process.env.SHARD_TOTAL),
+            shardList,
             totalClusters: "auto",
             shardsPerClusters: Number(process.env.SHARD_PER_CLUSTER),
             mode: "worker"
