@@ -20,7 +20,7 @@ export const GuildSetting = getModelForClass(GuildSettingSchema, {
 });
 
 export async function getGuildSetting(id: string): Promise<GuildSettingSchema> {
-    const data: GuildSettingSchema = await GuildSetting.findOne({ id });
+    let data: GuildSettingSchema = await GuildSetting.findOne({ id });
 
     if (!data) {
         // @ts-ignore
