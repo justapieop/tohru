@@ -10,7 +10,7 @@ export class Ready {
         await client.guilds.fetch();
         await client.clearApplicationCommands();
         await client.music.start();
-        
+
         !Constants.NODE_ENV_DEV ?
             await client.initGlobalApplicationCommands() :
             await client.initGuildApplicationCommands(
